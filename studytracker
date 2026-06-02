@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quant Dev Study Plan v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0f0e0c;
+  --surface:#171614;
+  --surface2:#1e1c19;
+  --border:#2a2722;
+  --accent:#e8b84b;
+  --accent2:#5fb37a;
+  --accent3:#6b9fd4;
+  --red:#d46b6b;
+  --text:#f0ebe2;
+  --muted:#6b6560;
+  --muted2:#8a8278;
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;padding-bottom:80px}
+
+/* Subtle noise texture */
+body::after{content:'';position:fixed;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+/* NAV */
+.nav{background:rgba(15,14,12,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.nav-brand{font-family:'Fraunces',serif;font-weight:900;font-size:16px;color:var(--accent);letter-spacing:-0.01em}
+.nav-brand span{color:var(--muted2);font-weight:300;font-style:italic}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{background:none;border:none;color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;padding:6px 14px;cursor:pointer;border-radius:6px;transition:all 0.15s;font-weight:500}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{color:var(--accent);background:rgba(232,184,75,0.08)}
+
+/* VIEWS */
+.view{display:none;padding:36px 28px;max-width:1000px;margin:0 auto;animation:fadeIn 0.2s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{margin-bottom:44px;padding-bottom:36px;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:12px}
+.hero-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(40px,6vw,72px);line-height:0.92;letter-spacing:-0.02em;margin-bottom:6px}
+.hero-title em{font-style:italic;font-weight:300;color:var(--accent)}
+.hero-sub{font-size:14px;color:var(--muted2);line-height:1.7;max-width:500px;margin-top:14px}
+.hero-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.hero-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-family:'DM Mono',monospace;letter-spacing:0.05em;border:1px solid}
+.chip-gold{border-color:rgba(232,184,75,0.3);color:var(--accent);background:rgba(232,184,75,0.06)}
+.chip-green{border-color:rgba(95,179,122,0.3);color:var(--accent2);background:rgba(95,179,122,0.06)}
+.chip-blue{border-color:rgba(107,159,212,0.3);color:var(--accent3);background:rgba(107,159,212,0.06)}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.stat-val{font-family:'Fraunces',serif;font-size:36px;font-weight:900;line-height:1;margin-bottom:4px}
+.stat-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+
+/* SECTION TITLE */
+.sec-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* OVERALL BAR */
+.bar-wrap{background:var(--surface2);border-radius:3px;height:6px;overflow:hidden;margin-bottom:6px}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.6s ease}
+.bar-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);display:flex;justify-content:space-between}
+
+/* PHASE PILLS */
+.phase-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.phase-pill{padding:6px 16px;border-radius:20px;font-size:12px;font-family:'DM Mono',monospace;border:1px solid;letter-spacing:0.04em}
+.pp1{border-color:rgba(232,184,75,0.3);color:var(--accent);background:rgba(232,184,75,0.06)}
+.pp2{border-color:rgba(95,179,122,0.3);color:var(--accent2);background:rgba(95,179,122,0.06)}
+.pp3{border-color:rgba(107,159,212,0.3);color:var(--accent3);background:rgba(107,159,212,0.06)}
+
+/* WEEK GRID */
+.weeks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:40px}
+.week-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all 0.15s;position:relative}
+.week-tile:hover{border-color:var(--muted2);transform:translateY(-2px)}
+.week-tile.done{border-color:rgba(95,179,122,0.4)}
+.wt-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.1em;margin-bottom:6px}
+.wt-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:10px}
+.wt-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.wt-bar{height:2px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.wt-fill{height:100%;border-radius:2px;transition:width 0.3s}
+.wt-check{position:absolute;top:10px;right:10px;width:18px;height:18px;background:var(--accent2);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:9px;color:#0f0e0c;font-weight:700}
+.week-tile.done .wt-check{display:flex}
+
+/* WEEK DETAIL */
+.wd-header{margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.back-btn{background:none;border:none;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;padding:0 0 14px;display:flex;align-items:center;gap:6px;transition:color 0.15s;letter-spacing:0.05em}
+.back-btn:hover{color:var(--text)}
+.wd-week-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px}
+.wd-title{font-family:'Fraunces',serif;font-size:clamp(24px,4vw,42px);font-weight:900;line-height:1.0;margin-bottom:12px}
+.wd-goal{font-size:14px;color:var(--muted2);line-height:1.7;max-width:560px;margin-bottom:16px}
+.wd-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wd-badge{font-family:'DM Mono',monospace;font-size:10px;padding:4px 12px;border-radius:20px;border:1px solid;letter-spacing:0.05em}
+.pct-display{font-family:'Fraunces',serif;font-size:52px;font-weight:900;line-height:1}
+.mark-btn{background:none;border:1px solid var(--border);color:var(--muted2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all 0.15s}
+.mark-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* DAY CARDS */
+.days-wrap{display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.day-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.15s}
+.day-hdr:hover{background:var(--surface2)}
+.day-hdr-l{display:flex;align-items:center;gap:12px}
+.day-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.day-name{font-weight:600;font-size:14px}
+.day-topic{font-size:12px;color:var(--muted2)}
+.day-hrs{font-family:'DM Mono',monospace;font-size:10px;background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:20px;color:var(--muted2)}
+.day-chev{color:var(--muted);transition:transform 0.25s}
+.day-card.open .day-chev{transform:rotate(180deg)}
+.day-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}
+.day-card.open .day-body{display:block}
+
+/* BLOCKS */
+.blocks{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.block{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:start}
+.block-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);padding-top:14px;letter-spacing:0.05em}
+.block-body{background:var(--surface2);border-radius:8px;padding:12px 14px;border:1px solid var(--border)}
+.block-tag{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.block-desc{font-size:12px;color:var(--muted2);line-height:1.55;margin-bottom:8px}
+.block-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.block-link{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:10px;color:var(--accent3);border:1px solid rgba(107,159,212,0.25);padding:3px 10px;border-radius:20px;text-decoration:none;transition:all 0.15s;background:rgba(107,159,212,0.05)}
+.block-link:hover{background:rgba(107,159,212,0.12);border-color:rgba(107,159,212,0.5)}
+.block-link.book{color:var(--accent);border-color:rgba(232,184,75,0.25);background:rgba(232,184,75,0.05)}
+.block-link.book:hover{background:rgba(232,184,75,0.12);border-color:rgba(232,184,75,0.5)}
+
+/* TAGS */
+.t-cs{color:#e8b84b}.t-cpp{color:#c084fc}.t-math{color:#5fb37a}.t-finance{color:#6b9fd4}.t-project{color:#f97316}.t-review{color:#6b6560}.t-lc{color:#e87b4b}
+
+/* CHECKLIST */
+.cl-section{margin-bottom:32px}
+.task-list{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.15s;user-select:none}
+.task-item:hover{border-color:var(--muted)}
+.task-item.checked{opacity:0.55}
+.task-item.checked .task-label{text-decoration:line-through}
+.task-cb{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.task-item.checked .task-cb{background:var(--accent2);border-color:var(--accent2)}
+.task-item.checked .task-cb::after{content:'✓';font-size:10px;font-weight:700;color:#0f0e0c}
+.task-label{font-size:13px;color:var(--text);line-height:1.4}
+.task-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace}
+
+/* LEETCODE */
+.lc-section{margin-bottom:32px}
+.lc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin-top:14px}
+.lc-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s}
+.lc-card:hover{border-color:var(--muted)}
+.lc-card.checked{opacity:0.5}
+.lc-card.checked .lc-name{text-decoration:line-through}
+.lc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.de{background:#5fb37a}.dm{background:#e8b84b}.dh{background:#d46b6b}
+.lc-info{flex:1}
+.lc-name{font-size:13px;font-weight:600;color:var(--text)}
+.lc-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px}
+.lc-link{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent3);text-decoration:none;padding:2px 8px;border:1px solid rgba(107,159,212,0.2);border-radius:10px;transition:all 0.15s;white-space:nowrap}
+.lc-link:hover{background:rgba(107,159,212,0.1)}
+.lc-cb{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.lc-card.checked .lc-cb{background:var(--accent2);border-color:var(--accent2)}
+.lc-card.checked .lc-cb::after{content:'✓';font-size:10px;font-weight:700;color:#0f0e0c}
+
+/* PROGRESS VIEW */
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:36px}
+.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:border-color 0.15s}
+.prog-card:hover{border-color:var(--muted)}
+.pc-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.pc-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:14px}
+.pc-bar-wrap{background:var(--surface2);border-radius:2px;height:4px;overflow:hidden;margin-bottom:6px}
+.pc-bar-fill{height:100%;border-radius:2px;transition:width 0.4s}
+.pc-bar-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);display:flex;justify-content:space-between}
+
+.lc-summary{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:36px}
+.lcs-title{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:var(--accent);margin-bottom:18px}
+.lcs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.lcs-box{text-align:center}
+.lcs-val{font-family:'Fraunces',serif;font-size:44px;font-weight:900;line-height:1}
+.lcs-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;margin-top:4px}
+
+@media(max-width:600px){
+  .view{padding:20px 16px}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .lcs-grid{grid-template-columns:repeat(3,1fr)}
+  .block{grid-template-columns:65px 1fr}
+  .hero-title{font-size:38px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Quant Dev <span>— relaxed plan</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('overview')">Overview</button>
+    <button class="nav-tab" onclick="showView('schedule')">Schedule</button>
+    <button class="nav-tab" onclick="showView('progress')">Progress</button>
+  </div>
+</nav>
+
+<!-- OVERVIEW -->
+<div id="view-overview" class="view active">
+  <div class="hero">
+    <div class="hero-eyebrow">Summer Break · 12 Weeks · 3 Days/Week · 4 Hours/Day</div>
+    <h1 class="hero-title">Quant Dev<br><em>Study Plan</em></h1>
+    <p class="hero-sub">A relaxed but structured summer — 3 days a week, 4 hours a day. Real links to free courses, YouTube, and your Stroustrup book. No burnout, just steady progress.</p>
+    <div class="hero-chips">
+      <div class="hero-chip chip-gold">Phase 1 · Wks 1–4 · CS + C++ Foundations</div>
+      <div class="hero-chip chip-green">Phase 2 · Wks 5–8 · C++ Deep Dive + Finance</div>
+      <div class="hero-chip chip-blue">Phase 3 · Wks 9–12 · Projects + Interview Prep</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-val" id="s-pct" style="color:var(--accent)">0%</div>
+      <div class="stat-label">Overall Progress</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="s-lc" style="color:var(--accent2)">0/45</div>
+      <div class="stat-label">LeetCode Done</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="s-wks" style="color:var(--accent3)">0/12</div>
+      <div class="stat-label">Weeks Complete</div>
+    </div>
+  </div>
+
+  <div class="sec-title">Overall Progress</div>
+  <div class="bar-wrap" style="margin-bottom:8px"><div class="bar-fill" id="overall-bar" style="width:0%"></div></div>
+  <div class="bar-meta" style="margin-bottom:36px"><span>Week 1</span><span id="overall-pct-lbl">0% complete</span><span>Week 12</span></div>
+
+  <div class="sec-title">12 Weeks at a Glance</div>
+  <div class="weeks-grid" id="weeks-grid"></div>
+</div>
+
+<!-- SCHEDULE -->
+<div id="view-schedule" class="view">
+  <div id="week-detail"></div>
+</div>
+
+<!-- PROGRESS -->
+<div id="view-progress" class="view">
+  <div class="sec-title">LeetCode Breakdown</div>
+  <div class="lc-summary">
+    <div class="lcs-title">Problems Solved</div>
+    <div class="lcs-grid">
+      <div class="lcs-box"><div class="lcs-val" id="lc-easy" style="color:#5fb37a">0</div><div class="lcs-lbl">Easy</div></div>
+      <div class="lcs-box"><div class="lcs-val" id="lc-med" style="color:#e8b84b">0</div><div class="lcs-lbl">Medium</div></div>
+      <div class="lcs-box"><div class="lcs-val" id="lc-hard" style="color:#d46b6b">0</div><div class="lcs-lbl">Hard</div></div>
+    </div>
+  </div>
+  <div class="sec-title">Week by Week</div>
+  <div class="prog-grid" id="prog-grid"></div>
+  <div class="sec-title">Skills Progress</div>
+  <div class="prog-grid" id="skills-grid"></div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+
+const W = [
+  {
+    id:1, phase:1, phaseLabel:"Phase 1", pc:"pp1", color:"var(--accent)",
+    title:"Python & Algorithm Basics",
+    goal:"Get comfortable with Python and start thinking algorithmically. Nice and gentle to ease into the summer.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent)", topic:"Python Fundamentals",
+        blocks:[
+          {time:"9:00–10:30",tag:"Python",tc:"t-cs",title:"Python Refresher",
+           desc:"Lists, dicts, sets, loops, functions, list comprehensions. Write clean, readable code.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=_uQrJ0TkZlc",label:"Python Full Course – freeCodeCamp"},
+             {url:"https://docs.python.org/3/tutorial/",label:"Official Python Tutorial",book:false}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Easy Array Problems",
+           desc:"Two Sum, Best Time to Buy Sell Stock, Contains Duplicate. Focus on understanding, not speed.",
+           links:[
+             {url:"https://leetcode.com/problems/two-sum/",label:"Two Sum – LC"},
+             {url:"https://www.youtube.com/watch?v=KLlXCFG5TnA",label:"Two Sum walkthrough – NeetCode"}
+           ]},
+          {time:"14:00–15:30",tag:"CS",tc:"t-cs",title:"Big-O Complexity",
+           desc:"What is O(n), O(log n), O(n²)? Analyse the time complexity of your Python solutions.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=Mo4vesaut8g",label:"Big-O in 15 mins – YouTube"},
+             {url:"https://www.bigocheatsheet.com/",label:"Big-O Cheat Sheet"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent)", topic:"Data Structures",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"Arrays, Stacks & Queues",
+           desc:"Implement a stack and queue from scratch in Python. Understand LIFO/FIFO. These are everywhere in trading systems.",
+           links:[
+             {url:"https://visualgo.net/en/list",label:"VisuAlgo – Interactive DS"},
+             {url:"https://www.youtube.com/watch?v=RBSGKlAvoiM",label:"DS & Algorithms – freeCodeCamp"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Stack & String Problems",
+           desc:"Valid Parentheses, Reverse String, Palindrome Number.",
+           links:[
+             {url:"https://leetcode.com/problems/valid-parentheses/",label:"Valid Parentheses – LC"},
+             {url:"https://neetcode.io/",label:"NeetCode – free solutions"}
+           ]},
+          {time:"14:00–15:30",tag:"CS",tc:"t-cs",title:"Hash Maps",
+           desc:"How hash maps work internally. Why O(1) lookup? Practice using dicts as lookup tables to solve problems.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=jalSiaIi8j4",label:"Hash Maps explained – CS Dojo"},
+             {url:"https://visualgo.net/en/hashtable",label:"VisuAlgo – Hash Table"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent)", topic:"Sorting & Review",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"Sorting Algorithms",
+           desc:"Understand merge sort and quicksort conceptually. Don't just memorise — understand WHY they are O(n log n).",
+           links:[
+             {url:"https://www.youtube.com/watch?v=MsYZSinhuFo",label:"Merge Sort – Michael Sambol"},
+             {url:"https://visualgo.net/en/sorting",label:"VisuAlgo – Sorting visualised"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Weekly LeetCode Catch-Up",
+           desc:"Revisit any problems you struggled with. Read official solutions and NeetCode explanations.",
+           links:[
+             {url:"https://neetcode.io/practice",label:"NeetCode Practice"},
+             {url:"https://www.youtube.com/@NeetCode",label:"NeetCode YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Reflection",
+           desc:"Write brief notes: what did you learn? What was confusing? Keep a simple text file — reviewing these later is very useful.",
+           links:[
+             {url:"https://www.notion.so/",label:"Notion – free note taking"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Two Sum",diff:"easy",topic:"Array",url:"https://leetcode.com/problems/two-sum/"},
+      {name:"Best Time to Buy and Sell Stock",diff:"easy",topic:"Array",url:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"},
+      {name:"Contains Duplicate",diff:"easy",topic:"Hash Set",url:"https://leetcode.com/problems/contains-duplicate/"},
+      {name:"Valid Parentheses",diff:"easy",topic:"Stack",url:"https://leetcode.com/problems/valid-parentheses/"},
+      {name:"Climbing Stairs",diff:"easy",topic:"DP/Recursion",url:"https://leetcode.com/problems/climbing-stairs/"},
+    ]
+  },
+  {
+    id:2, phase:1, phaseLabel:"Phase 1", pc:"pp1", color:"var(--accent)",
+    title:"Trees, Recursion & Binary Search",
+    goal:"Master the patterns that show up most in quant dev interviews. Binary search and tree traversal are guaranteed topics.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent)", topic:"Recursion",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"Recursion Deep Dive",
+           desc:"Trace the call stack manually for fibonacci and factorial. Draw the recursion tree. This is how recursive trading algorithms are reasoned about.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=IJDJ0kBx2LM",label:"Recursion crash course – Reducible"},
+             {url:"https://visualgo.net/en/recursion",label:"VisuAlgo – Recursion"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Recursion Problems",
+           desc:"Reverse Linked List, Power of Two, Fibonacci Number.",
+           links:[
+             {url:"https://leetcode.com/problems/reverse-linked-list/",label:"Reverse Linked List – LC"},
+             {url:"https://www.youtube.com/watch?v=G0_I-ZF0S38",label:"Reverse LL – NeetCode"}
+           ]},
+          {time:"14:00–15:30",tag:"CS",tc:"t-cs",title:"Linked Lists",
+           desc:"Singly and doubly linked lists. Implement from scratch. Compare to arrays — when is each better?",
+           links:[
+             {url:"https://www.youtube.com/watch?v=F8AbOfQwl1c",label:"Linked Lists – freeCodeCamp"},
+             {url:"https://visualgo.net/en/list",label:"VisuAlgo – Linked List"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent)", topic:"Binary Trees",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"Binary Trees & BST",
+           desc:"In-order, pre-order, post-order traversal. Implement each. A BST is like a sorted order book — great mental model.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=fAAZixBzIAI",label:"Binary Trees – freeCodeCamp"},
+             {url:"https://visualgo.net/en/bst",label:"VisuAlgo – BST"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Tree Problems",
+           desc:"Maximum Depth of Binary Tree, Invert Binary Tree, Same Tree.",
+           links:[
+             {url:"https://leetcode.com/problems/maximum-depth-of-binary-tree/",label:"Max Depth – LC"},
+             {url:"https://www.youtube.com/watch?v=hTM3phVI6YQ",label:"Tree problems – NeetCode"}
+           ]},
+          {time:"14:00–15:30",tag:"CS",tc:"t-cs",title:"Binary Search",
+           desc:"Implement binary search. Understand why it's O(log n). Recognise it in interview problems — often disguised.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=P3YID7liBug",label:"Binary Search – NeetCode"},
+             {url:"https://leetcode.com/problems/binary-search/",label:"Binary Search – LC"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent)", topic:"Review & C++ Hello",
+        blocks:[
+          {time:"9:00–10:30",tag:"LeetCode",tc:"t-lc",title:"Binary Search Problems",
+           desc:"Search Insert Position, First Bad Version — classic binary search applications.",
+           links:[
+             {url:"https://leetcode.com/problems/search-insert-position/",label:"Search Insert – LC"},
+             {url:"https://leetcode.com/problems/first-bad-version/",label:"First Bad Version – LC"}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"C++ First Steps",
+           desc:"Install g++ (or use replit.com). Write your first C++ program. Variables, types, loops, functions vs Python.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-cplusplus/",label:"LearnCPP.com – free & excellent"},
+             {url:"https://replit.com/","label":"Replit – browser C++ IDE (no install)"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"Stroustrup Ch.1–2",
+           desc:"Read chapters 1–2 of your Stroustrup book. The intro philosophy of C++ and your first programs.",
+           links:[
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup book companion site",book:true},
+             {url:"https://www.youtube.com/watch?v=18c3MTX0PK0",label:"C++ basics intro – The Cherno"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Maximum Depth of Binary Tree",diff:"easy",topic:"Tree",url:"https://leetcode.com/problems/maximum-depth-of-binary-tree/"},
+      {name:"Invert Binary Tree",diff:"easy",topic:"Tree",url:"https://leetcode.com/problems/invert-binary-tree/"},
+      {name:"Reverse Linked List",diff:"easy",topic:"Linked List",url:"https://leetcode.com/problems/reverse-linked-list/"},
+      {name:"Binary Search",diff:"easy",topic:"Binary Search",url:"https://leetcode.com/problems/binary-search/"},
+      {name:"Search Insert Position",diff:"easy",topic:"Binary Search",url:"https://leetcode.com/problems/search-insert-position/"},
+    ]
+  },
+  {
+    id:3, phase:1, phaseLabel:"Phase 1", pc:"pp1", color:"var(--accent)",
+    title:"Dynamic Programming & C++ Syntax",
+    goal:"DP is the hardest pattern but asked at almost every quant firm. Start gently. Begin writing real C++ code.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent)", topic:"DP Introduction",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"DP — Memoisation",
+           desc:"Top-down DP. Fibonacci with caching. Draw the recursion tree — cross out duplicate subproblems. That's memoisation.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=oBt53YbR9Kk",label:"DP for beginners – freeCodeCamp"},
+             {url:"https://www.youtube.com/watch?v=vYquumk4nWw",label:"DP intro – NeetCode"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Easy DP Problems",
+           desc:"House Robber, Min Cost Climbing Stairs, N-th Tribonacci.",
+           links:[
+             {url:"https://leetcode.com/problems/house-robber/",label:"House Robber – LC"},
+             {url:"https://www.youtube.com/watch?v=73r3KWiEvyk",label:"House Robber – NeetCode"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"C++ Control Flow & Functions",
+           desc:"If/else, loops, functions, references vs pointers intro. Stroustrup Ch.3–4.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-functions/",label:"LearnCPP – Functions",book:false},
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup Ch.3–4",book:true}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent)", topic:"DP — Tabulation",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"DP — Bottom Up",
+           desc:"Build a table from base cases upward. Coin Change is the classic example — understand it deeply.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=H9bfqozjoqs",label:"Coin Change – NeetCode"},
+             {url:"https://www.youtube.com/watch?v=oBt53YbR9Kk&t=3600s",label:"DP Tabulation section – freeCodeCamp"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"DP Medium Problems",
+           desc:"Unique Paths, Coin Change.",
+           links:[
+             {url:"https://leetcode.com/problems/unique-paths/",label:"Unique Paths – LC"},
+             {url:"https://leetcode.com/problems/coin-change/",label:"Coin Change – LC"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"C++ Arrays & Vectors",
+           desc:"C-style arrays vs std::vector. How memory layout differs from Python lists. This matters for performance.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/an-introduction-to-stdvector/",label:"LearnCPP – std::vector"},
+             {url:"https://www.youtube.com/watch?v=PocJ5jXv8No",label:"Vectors & Arrays – The Cherno"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent)", topic:"Practice & Review",
+        blocks:[
+          {time:"9:00–10:30",tag:"LeetCode",tc:"t-lc",title:"More DP",
+           desc:"Jump Game, Maximum Product Subarray — push yourself a little.",
+           links:[
+             {url:"https://leetcode.com/problems/jump-game/",label:"Jump Game – LC"},
+             {url:"https://www.youtube.com/watch?v=Vn2LMdBIBFM",label:"Jump Game – NeetCode"}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"Translate Python → C++",
+           desc:"Take your House Robber Python solution and rewrite it in C++. Focus on syntax differences.",
+           links:[
+             {url:"https://www.learncpp.com/",label:"LearnCPP.com – reference"},
+             {url:"https://godbolt.org/",label:"Compiler Explorer – see your C++ compiled"}
+           ]},
+          {time:"14:00–15:30",tag:"Math",tc:"t-math",title:"Intro Probability",
+           desc:"Sample spaces, events, basic probability. This comes up in every quant interview — start now.",
+           links:[
+             {url:"https://www.khanacademy.org/math/statistics-probability/probability-library",label:"Khan Academy – Probability (free)"},
+             {url:"https://www.youtube.com/watch?v=uzkc-qNVoOk",label:"Intro to Probability – MIT OCW"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"House Robber",diff:"medium",topic:"DP",url:"https://leetcode.com/problems/house-robber/"},
+      {name:"Unique Paths",diff:"medium",topic:"DP",url:"https://leetcode.com/problems/unique-paths/"},
+      {name:"Coin Change",diff:"medium",topic:"DP",url:"https://leetcode.com/problems/coin-change/"},
+      {name:"Jump Game",diff:"medium",topic:"DP/Greedy",url:"https://leetcode.com/problems/jump-game/"},
+    ]
+  },
+  {
+    id:4, phase:1, phaseLabel:"Phase 1", pc:"pp1", color:"var(--accent)",
+    title:"Graphs & Phase 1 Mini-Project",
+    goal:"Round out your DS&A foundations. Build your first portfolio project — a Python data analysis script.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent)", topic:"Graphs",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"Graph Basics — BFS & DFS",
+           desc:"Adjacency list representation. BFS uses a queue, DFS uses a stack (or recursion). Understand when to use each.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=tWVWeAqZ0WU",label:"Graph Algorithms – freeCodeCamp"},
+             {url:"https://visualgo.net/en/dfsbfs",label:"VisuAlgo – BFS/DFS animated"}
+           ]},
+          {time:"10:30–12:00",tag:"LeetCode",tc:"t-lc",title:"Graph Problems",
+           desc:"Number of Islands, Flood Fill — classic graph problems.",
+           links:[
+             {url:"https://leetcode.com/problems/number-of-islands/",label:"Number of Islands – LC"},
+             {url:"https://www.youtube.com/watch?v=pV2kpPD66nE",label:"Number of Islands – NeetCode"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"C++ Classes & Structs",
+           desc:"Define a class in C++. Understand constructors and destructors. Stroustrup Ch.9.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-object-oriented-programming/",label:"LearnCPP – OOP"},
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup Ch.9",book:true}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent)", topic:"More Graphs + Project Start",
+        blocks:[
+          {time:"9:00–10:30",tag:"LeetCode",tc:"t-lc",title:"Sliding Window",
+           desc:"Learn the sliding window pattern — very useful for time series and financial data analysis. Longest Substring Without Repeating Characters.",
+           links:[
+             {url:"https://leetcode.com/problems/longest-substring-without-repeating-characters/",label:"Longest Substring – LC"},
+             {url:"https://www.youtube.com/watch?v=3IETreEybaA",label:"Sliding Window – NeetCode"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Project Setup — Stock Analyser",
+           desc:"Install yfinance and pandas. Fetch 1 year of price data for a stock. Print the DataFrame. This is your first finance project.",
+           links:[
+             {url:"https://pypi.org/project/yfinance/",label:"yfinance – install guide"},
+             {url:"https://www.youtube.com/watch?v=2BrpKpWwT2A",label:"yfinance tutorial – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Project",tc:"t-project",title:"Project — Add Statistics",
+           desc:"Compute: daily returns, rolling 30-day mean, rolling std deviation (volatility). Only use pandas — no shortcuts.",
+           links:[
+             {url:"https://pandas.pydata.org/docs/getting_started/intro_tutorials/",label:"Pandas getting started – free"},
+             {url:"https://www.youtube.com/watch?v=vmEHCJofslg",label:"Pandas tutorial – freeCodeCamp"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent)", topic:"Project Finish + Phase Review",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Project — Visualise",
+           desc:"Plot price history and daily returns distribution using matplotlib. Make it look clean — you'll show this to employers.",
+           links:[
+             {url:"https://matplotlib.org/stable/tutorials/index.html",label:"Matplotlib tutorials – free"},
+             {url:"https://www.youtube.com/watch?v=3Xc3CA655Y4",label:"Matplotlib crash course – freeCodeCamp"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Project — GitHub",
+           desc:"Create a GitHub account if you don't have one. Push your project with a clear README. This is now portfolio piece #1.",
+           links:[
+             {url:"https://docs.github.com/en/get-started/quickstart/create-a-repo",label:"GitHub – Create your first repo"},
+             {url:"https://www.youtube.com/watch?v=RGOj5yH7evk",label:"Git & GitHub crash course – freeCodeCamp"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Phase 1 Wrap-Up",
+           desc:"Rate yourself 1–5 on: arrays, recursion, DP, graphs, basic C++ syntax. Write down what you want to revisit in Phase 2.",
+           links:[
+             {url:"https://neetcode.io/roadmap",label:"NeetCode Roadmap — track where you are"},
+             {url:"https://www.youtube.com/watch?v=ft0owvS5tQA",label:"CS fundamentals recap – CS Dojo"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Number of Islands",diff:"medium",topic:"Graph/BFS",url:"https://leetcode.com/problems/number-of-islands/"},
+      {name:"Longest Substring Without Repeating Characters",diff:"medium",topic:"Sliding Window",url:"https://leetcode.com/problems/longest-substring-without-repeating-characters/"},
+      {name:"Course Schedule",diff:"medium",topic:"Graph/Topological Sort",url:"https://leetcode.com/problems/course-schedule/"},
+    ]
+  },
+  {
+    id:5, phase:2, phaseLabel:"Phase 2", pc:"pp2", color:"var(--accent2)",
+    title:"C++ Fundamentals — Memory & Pointers",
+    goal:"C++ gets serious now. Memory management is what separates quant devs from regular devs. Go slow, go deep.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent2)", topic:"Pointers & Memory",
+        blocks:[
+          {time:"9:00–10:30",tag:"C++",tc:"t-cpp",title:"Pointers & References",
+           desc:"Stack vs heap. Pointers, dereferencing, pointer arithmetic. This is confusing at first — that's normal. Stroustrup Ch.17.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-pointers/",label:"LearnCPP – Pointers"},
+             {url:"https://www.youtube.com/watch?v=DTxHyVn0ODg",label:"Pointers – The Cherno"},
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup Ch.17",book:true}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"Dynamic Memory — new & delete",
+           desc:"Allocate on the heap. Understand memory leaks. Write a program that leaks memory, then fix it.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/dynamic-memory-allocation-with-new-and-delete/",label:"LearnCPP – Dynamic Memory"},
+             {url:"https://www.youtube.com/watch?v=CSVRA4_xOkw",label:"new & delete – The Cherno"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"Smart Pointers",
+           desc:"unique_ptr, shared_ptr. Why raw pointers are dangerous in production. Stroustrup Ch.19.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-smart-pointers-move-semantics/",label:"LearnCPP – Smart Pointers"},
+             {url:"https://www.youtube.com/watch?v=UOB7-B2MfwA",label:"Smart Pointers – The Cherno"},
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup Ch.19",book:true}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent2)", topic:"STL Containers",
+        blocks:[
+          {time:"9:00–10:30",tag:"C++",tc:"t-cpp",title:"STL — vector, map, set",
+           desc:"The C++ standard library containers. These are what you use instead of Python lists/dicts. Understand their time complexities.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-the-standard-template-library/",label:"LearnCPP – STL"},
+             {url:"https://www.youtube.com/watch?v=SYgA0KFjLGg",label:"C++ STL overview – The Cherno"},
+             {url:"https://cppreference.com",label:"cppreference.com – full STL docs"}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"STL Algorithms",
+           desc:"std::sort, std::find, std::accumulate, std::transform. Never write a loop when an STL algorithm exists.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-standard-library-algorithms/",label:"LearnCPP – STL Algorithms"},
+             {url:"https://www.youtube.com/watch?v=2olsGf6JIkU",label:"STL Algorithms – The Cherno"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Solve in C++",
+           desc:"Take 2 problems from previous weeks and rewrite them in C++ using STL containers. Practice thinking in C++.",
+           links:[
+             {url:"https://leetcode.com/",label:"LeetCode — switch language to C++"},
+             {url:"https://www.learncpp.com/",label:"LearnCPP — reference while solving"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent2)", topic:"Math Foundation",
+        blocks:[
+          {time:"9:00–10:30",tag:"Math",tc:"t-math",title:"Statistics — Mean, Variance, Std Dev",
+           desc:"These are used daily in quant roles. Understand them properly, not just formulaically. Compute by hand for a small dataset.",
+           links:[
+             {url:"https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data",label:"Khan Academy – Stats (free)"},
+             {url:"https://www.youtube.com/watch?v=SzZ6GpcfoQY",label:"Statistics for beginners – StatQuest"}
+           ]},
+          {time:"10:30–12:00",tag:"Math",tc:"t-math",title:"Probability — Conditional & Bayes",
+           desc:"P(A|B), Bayes theorem. These come up directly in quant interviews as probability puzzles.",
+           links:[
+             {url:"https://www.khanacademy.org/math/ap-statistics/probability-ap/stats-conditional-probability/v/conditional-probability-and-combinations",label:"Khan Academy – Conditional Probability"},
+             {url:"https://www.youtube.com/watch?v=HZGCoVF3YvM",label:"Bayes Theorem – 3Blue1Brown"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Medium Problems",
+           desc:"LRU Cache, Design HashMap — design-style problems that appear in quant dev interviews.",
+           links:[
+             {url:"https://leetcode.com/problems/lru-cache/",label:"LRU Cache – LC"},
+             {url:"https://www.youtube.com/watch?v=7ABFKPK2hD4",label:"LRU Cache – NeetCode"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"LRU Cache",diff:"medium",topic:"Design/HashMap",url:"https://leetcode.com/problems/lru-cache/"},
+      {name:"Find Minimum in Rotated Sorted Array",diff:"medium",topic:"Binary Search",url:"https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"},
+      {name:"Daily Temperatures",diff:"medium",topic:"Monotonic Stack",url:"https://leetcode.com/problems/daily-temperatures/"},
+    ]
+  },
+  {
+    id:6, phase:2, phaseLabel:"Phase 2", pc:"pp2", color:"var(--accent2)",
+    title:"C++ Classes, Templates & Finance Intro",
+    goal:"C++ OOP and templates. First taste of real financial mathematics — options and Black-Scholes.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent2)", topic:"C++ OOP",
+        blocks:[
+          {time:"9:00–10:30",tag:"C++",tc:"t-cpp",title:"C++ Classes in Depth",
+           desc:"Constructors, destructors, copy/move semantics. RAII pattern — critical for safe resource management in trading systems. Stroustrup Ch.9–10.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/classes-and-class-members/",label:"LearnCPP – Classes"},
+             {url:"https://www.youtube.com/watch?v=2BP8NhxjrO0",label:"C++ Classes – The Cherno"},
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup Ch.9–10",book:true}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"Operator Overloading",
+           desc:"Overload +, -, ==, << for your own types. Used heavily in financial math libraries.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-operator-overloading/",label:"LearnCPP – Operator Overloading"},
+             {url:"https://www.youtube.com/watch?v=mS9755gF66w",label:"Operator Overloading – The Cherno"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"Templates Intro",
+           desc:"Function and class templates. Why template code runs faster than polymorphism for number-crunching.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/function-templates/",label:"LearnCPP – Templates"},
+             {url:"https://www.youtube.com/watch?v=I-hZkUa9mIs",label:"Templates – The Cherno"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent2)", topic:"Finance Foundations",
+        blocks:[
+          {time:"9:00–10:30",tag:"Finance",tc:"t-finance",title:"Financial Instruments",
+           desc:"What are equities, bonds, options, futures? Understand what you are building systems for. Investopedia is your friend.",
+           links:[
+             {url:"https://www.investopedia.com/financial-term-dictionary-4769738",label:"Investopedia – financial terms"},
+             {url:"https://www.youtube.com/watch?v=yPTe6Wd7cRY",label:"How stock markets work – Wendover Productions"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"Options — Calls, Puts & Greeks",
+           desc:"What is a call option? What is a put? Strike, expiry, premium. Delta: how option price changes with stock price.",
+           links:[
+             {url:"https://www.investopedia.com/options-basics-tutorial-4583012",label:"Investopedia – Options Basics"},
+             {url:"https://www.youtube.com/watch?v=7PM4rNDr4oI",label:"Options explained – Khan Academy"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Black-Scholes Formula",
+           desc:"Understand each input: S, K, r, σ, T. Don't try to derive it yet — understand what it calculates and implement it in Python.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=pr-u4LCFYEY",label:"Black-Scholes explained – YouTube"},
+             {url:"https://www.investopedia.com/terms/b/blackscholes.asp",label:"Investopedia – Black-Scholes"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent2)", topic:"Options Pricer Project",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Options Pricer in Python",
+           desc:"Implement Black-Scholes in Python. Price a European call and put. Print the delta and gamma too.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=3203tNQCLhM",label:"Black-Scholes in Python – YouTube"},
+             {url:"https://scipy.org/",label:"SciPy docs – norm.cdf function"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Options Pricer in C++",
+           desc:"Rewrite the Black-Scholes pricer in C++. Use std::erfc for the normal CDF. This becomes a great portfolio project.",
+           links:[
+             {url:"https://cppreference.com/w/cpp/numeric/math/erfc.html",label:"cppreference – erfc function"},
+             {url:"https://www.youtube.com/watch?v=9vKfVkQbzaQ",label:"C++ math functions – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Hard Problem Attempt",
+           desc:"Try one hard problem — Trapping Rain Water or Median of Two Sorted Arrays. Don't worry if you don't finish. Read the solution carefully.",
+           links:[
+             {url:"https://leetcode.com/problems/trapping-rain-water/",label:"Trapping Rain Water – LC"},
+             {url:"https://www.youtube.com/watch?v=ZI2z5pq0TqA",label:"Trapping Rain Water – NeetCode"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Trapping Rain Water",diff:"hard",topic:"Monotonic Stack",url:"https://leetcode.com/problems/trapping-rain-water/"},
+      {name:"Median of Two Sorted Arrays",diff:"hard",topic:"Binary Search",url:"https://leetcode.com/problems/median-of-two-sorted-arrays/"},
+      {name:"Maximum Product Subarray",diff:"medium",topic:"DP",url:"https://leetcode.com/problems/maximum-product-subarray/"},
+    ]
+  },
+  {
+    id:7, phase:2, phaseLabel:"Phase 2", pc:"pp2", color:"var(--accent2)",
+    title:"Multithreading, System Design & Risk",
+    goal:"Concurrency is core to trading systems. Intro to system design. Learn how financial risk is measured.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent2)", topic:"C++ Concurrency",
+        blocks:[
+          {time:"9:00–10:30",tag:"C++",tc:"t-cpp",title:"Threads in C++",
+           desc:"std::thread, creating and joining threads. Why threads exist in trading systems — parallel market data processing.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/introduction-to-threads/",label:"LearnCPP – Threads"},
+             {url:"https://www.youtube.com/watch?v=3aqxaZsvn80",label:"C++ Threading – The Cherno"}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"Mutex & Data Races",
+           desc:"What is a data race? How to prevent with std::mutex. lock_guard RAII wrapper.",
+           links:[
+             {url:"https://www.learncpp.com/cpp-tutorial/sharing-data-between-threads/",label:"LearnCPP – Mutex"},
+             {url:"https://www.youtube.com/watch?v=F6Ipn7gCOsY",label:"Mutex explained – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Design Problems",
+           desc:"Min Stack, Implement Queue using Stacks — design-flavoured problems, lighter than previous hard problems.",
+           links:[
+             {url:"https://leetcode.com/problems/min-stack/",label:"Min Stack – LC"},
+             {url:"https://www.youtube.com/watch?v=WxHTalHhFBU",label:"Min Stack – NeetCode"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent2)", topic:"System Design Basics",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"System Design — Core Concepts",
+           desc:"Scalability, latency, throughput. CAP theorem. These come up at banks and larger hedge funds in interviews.",
+           links:[
+             {url:"https://github.com/donnemartin/system-design-primer",label:"System Design Primer – GitHub (free)"},
+             {url:"https://www.youtube.com/watch?v=i53Gi_K3o7I",label:"System Design basics – freeCodeCamp"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"Value at Risk (VaR)",
+           desc:"What is VaR? Historical simulation method. Implement a simple VaR calculator in Python using your returns data.",
+           links:[
+             {url:"https://www.investopedia.com/terms/v/var.asp",label:"Investopedia – VaR explained"},
+             {url:"https://www.youtube.com/watch?v=92WaNfdjCwE",label:"VaR explained – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Sharpe Ratio & Portfolio Metrics",
+           desc:"Sharpe ratio, max drawdown, CAGR. Add these calculations to your stock analyser project.",
+           links:[
+             {url:"https://www.investopedia.com/terms/s/sharperatio.asp",label:"Investopedia – Sharpe Ratio"},
+             {url:"https://www.youtube.com/watch?v=0EKiuHUxIbc",label:"Portfolio metrics – YouTube"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent2)", topic:"Practice & Review",
+        blocks:[
+          {time:"9:00–10:30",tag:"LeetCode",tc:"t-lc",title:"Medium/Hard Mix",
+           desc:"Task Scheduler, Sliding Window Maximum — push the difficulty a bit.",
+           links:[
+             {url:"https://leetcode.com/problems/task-scheduler/",label:"Task Scheduler – LC"},
+             {url:"https://leetcode.com/problems/sliding-window-maximum/",label:"Sliding Window Maximum – LC"}
+           ]},
+          {time:"10:30–12:00",tag:"Math",tc:"t-math",title:"Linear Algebra Basics",
+           desc:"Matrices, matrix multiply, dot product. Used in risk models and portfolio optimisation. Khan Academy is excellent for this.",
+           links:[
+             {url:"https://www.khanacademy.org/math/linear-algebra",label:"Khan Academy – Linear Algebra (free)"},
+             {url:"https://www.youtube.com/watch?v=fNk_zzaMoSs",label:"Linear Algebra – 3Blue1Brown (Essence of LA)"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"Stroustrup Review Session",
+           desc:"Revisit any chapter from Stroustrup you found confusing. His book is dense — re-reading is normal and valuable.",
+           links:[
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup companion site",book:true},
+             {url:"https://www.youtube.com/watch?v=18c3MTX0PK0&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb",label:"The Cherno C++ series – full playlist"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Task Scheduler",diff:"medium",topic:"Greedy/Heap",url:"https://leetcode.com/problems/task-scheduler/"},
+      {name:"Sliding Window Maximum",diff:"hard",topic:"Deque",url:"https://leetcode.com/problems/sliding-window-maximum/"},
+      {name:"Min Stack",diff:"medium",topic:"Design/Stack",url:"https://leetcode.com/problems/min-stack/"},
+    ]
+  },
+  {
+    id:8, phase:2, phaseLabel:"Phase 2", pc:"pp2", color:"var(--accent2)",
+    title:"Backtesting Project — Core Build",
+    goal:"Your most impressive project. A backtesting framework shows both CS and finance knowledge in one package.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent2)", topic:"Project Architecture",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Design the Backtester",
+           desc:"Before coding: draw the system. Data layer → Strategy → Portfolio → Analytics. Think about interfaces and classes.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=drUToKxEAUA",label:"How to build a backtester – QuantPy YouTube"},
+             {url:"https://www.youtube.com/watch?v=VirMFuBVTHo",label:"Backtesting concepts – PyQuant News"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Data Layer",
+           desc:"Download 2 years of OHLCV data. Clean it — handle missing values, adjust for splits. Store in a structured way.",
+           links:[
+             {url:"https://pypi.org/project/yfinance/",label:"yfinance docs"},
+             {url:"https://pandas.pydata.org/docs/",label:"Pandas docs – data cleaning"}
+           ]},
+          {time:"14:00–15:30",tag:"Project",tc:"t-project",title:"Strategy — Moving Average Crossover",
+           desc:"Implement a simple moving average crossover strategy. Buy when 20-day MA crosses above 50-day MA. Sell when it crosses below.",
+           links:[
+             {url:"https://www.investopedia.com/terms/m/movingaverage.asp",label:"Investopedia – Moving Averages"},
+             {url:"https://www.youtube.com/watch?v=xIGEoFB6kDQ",label:"MA crossover strategy – YouTube"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent2)", topic:"Portfolio Engine",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Portfolio Tracking",
+           desc:"Track positions, cash, portfolio value over time. Handle buy/sell orders. Include a simple transaction cost (0.1% per trade).",
+           links:[
+             {url:"https://www.youtube.com/watch?v=C7yd89m-9gk",label:"Portfolio engine – QuantPy YouTube"},
+             {url:"https://numpy.org/doc/stable/",label:"NumPy docs – array operations"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Performance Metrics",
+           desc:"Add: Sharpe ratio, max drawdown, total return, vs buy-and-hold benchmark. These are what employers look for.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=J8DPrGUFKSA",label:"Backtesting metrics – YouTube"},
+             {url:"https://www.investopedia.com/terms/m/maximum-drawdown.asp",label:"Investopedia – Max Drawdown"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Hard DP",
+           desc:"Best Time to Buy and Sell Stock III — directly related to trading, and a common hard interview question.",
+           links:[
+             {url:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/",label:"Stock III – LC"},
+             {url:"https://www.youtube.com/watch?v=Pw6lrYAjttk",label:"Stock III – NeetCode"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent2)", topic:"Charts, Polish & Push",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Equity Curve & Charts",
+           desc:"Plot: equity curve vs benchmark, drawdown chart, monthly returns. Make it look professional with clear labels.",
+           links:[
+             {url:"https://matplotlib.org/stable/gallery/",label:"Matplotlib gallery – inspiration"},
+             {url:"https://plotly.com/python/",label:"Plotly – interactive charts (optional upgrade)"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Polish & Document",
+           desc:"Write a README: what it does, how it works, results. Add docstrings to your functions. Push to GitHub.",
+           links:[
+             {url:"https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax",label:"GitHub – Markdown README guide"},
+             {url:"https://www.youtube.com/watch?v=HUBNt18RFbo",label:"Write great READMEs – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Phase 2 Reflection",
+           desc:"Review your two projects. Do they show both CS skill and finance knowledge? Rate yourself on: C++, financial maths, system design.",
+           links:[
+             {url:"https://neetcode.io/roadmap",label:"NeetCode roadmap — assess your LC progress"},
+             {url:"https://www.levels.fyi/",label:"Levels.fyi — see what skills top firms want"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Best Time to Buy and Sell Stock III",diff:"hard",topic:"DP",url:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/"},
+      {name:"Edit Distance",diff:"medium",topic:"DP",url:"https://leetcode.com/problems/edit-distance/"},
+      {name:"Merge k Sorted Lists",diff:"hard",topic:"Heap/LinkedList",url:"https://leetcode.com/problems/merge-k-sorted-lists/"},
+    ]
+  },
+  {
+    id:9, phase:3, phaseLabel:"Phase 3", pc:"pp3", color:"var(--accent3)",
+    title:"Time Series & Finance Deepening",
+    goal:"Time series analysis is the bread and butter of quant work. Understand volatility and how markets behave over time.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent3)", topic:"Time Series Fundamentals",
+        blocks:[
+          {time:"9:00–10:30",tag:"Finance",tc:"t-finance",title:"Returns & Volatility",
+           desc:"Log returns vs simple returns. Rolling volatility. Why volatility is mean-reverting. This is fundamental quant knowledge.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=990L4jFvJt4",label:"Financial returns explained – YouTube"},
+             {url:"https://www.investopedia.com/terms/v/volatility.asp",label:"Investopedia – Volatility"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"Stationarity & the ADF Test",
+           desc:"What is a stationary time series? Why does it matter? Run the ADF test on stock prices vs returns in Python.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=oY-j2Wof51c",label:"Stationarity explained – ritvikmath"},
+             {url:"https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html",label:"statsmodels – ADF test docs"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Hard Problem Session",
+           desc:"Find Median from Data Stream, Largest Rectangle in Histogram.",
+           links:[
+             {url:"https://leetcode.com/problems/find-median-from-data-stream/",label:"Find Median – LC"},
+             {url:"https://www.youtube.com/watch?v=ySN5Wnu88nE",label:"Find Median – NeetCode"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent3)", topic:"Monte Carlo & Simulation",
+        blocks:[
+          {time:"9:00–10:30",tag:"Math",tc:"t-math",title:"Monte Carlo Methods",
+           desc:"Random number generation. Estimate Pi with Monte Carlo first as a warmup — then simulate stock price paths.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=7ESK5SaP-bc",label:"Monte Carlo explained – YouTube"},
+             {url:"https://numpy.org/doc/stable/reference/random/",label:"NumPy random module docs"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"Geometric Brownian Motion",
+           desc:"GBM is the basis of Black-Scholes. Simulate 100 stock price paths. Plot them. Understand drift and diffusion.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=4G_WdFW2DaM",label:"GBM simulation – YouTube"},
+             {url:"https://www.investopedia.com/terms/g/geometric-brownian-motion.asp",label:"Investopedia – GBM"}
+           ]},
+          {time:"14:00–15:30",tag:"C++",tc:"t-cpp",title:"Monte Carlo in C++",
+           desc:"Rewrite the GBM simulator in C++. Use std::mt19937 for the random number generator — the standard in finance code.",
+           links:[
+             {url:"https://cppreference.com/w/cpp/numeric/random/mersenne_twister_engine.html",label:"cppreference – mt19937"},
+             {url:"https://www.youtube.com/watch?v=45MIykWJ-C4",label:"C++ random numbers – The Cherno"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent3)", topic:"Market Microstructure",
+        blocks:[
+          {time:"9:00–10:30",tag:"Finance",tc:"t-finance",title:"Order Books & Market Making",
+           desc:"What is a limit order book? Bid-ask spread, market depth, price impact. Understanding this is essential for a quant dev.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=Kl4-VJ2K8Ik",label:"Order book explained – YouTube"},
+             {url:"https://www.investopedia.com/terms/o/order-book.asp",label:"Investopedia – Order Book"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Simple Order Book in C++",
+           desc:"Start building a limit order book in C++. Use std::map for price levels (sorted). Add bid and ask sides.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=dUMl-5QeofA",label:"Building an order book – YouTube"},
+             {url:"https://cppreference.com/w/cpp/container/map.html",label:"cppreference – std::map"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Week Review",
+           desc:"Consolidate this week's learning. Can you explain GBM and an order book in plain English? That's the interview test.",
+           links:[
+             {url:"https://www.youtube.com/@ritvikmath",label:"ritvikmath – quantitative finance YouTube"},
+             {url:"https://www.youtube.com/@QuantPy",label:"QuantPy – Python quant finance"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Find Median from Data Stream",diff:"hard",topic:"Heap/Design",url:"https://leetcode.com/problems/find-median-from-data-stream/"},
+      {name:"Largest Rectangle in Histogram",diff:"hard",topic:"Monotonic Stack",url:"https://leetcode.com/problems/largest-rectangle-in-histogram/"},
+      {name:"Longest Consecutive Sequence",diff:"medium",topic:"Hash Set",url:"https://leetcode.com/problems/longest-consecutive-sequence/"},
+    ]
+  },
+  {
+    id:10, phase:3, phaseLabel:"Phase 3", pc:"pp3", color:"var(--accent3)",
+    title:"ML for Finance & Capstone Project",
+    goal:"Apply machine learning to financial data — a key skill at hedge funds. Start your capstone project.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent3)", topic:"ML for Finance",
+        blocks:[
+          {time:"9:00–10:30",tag:"Finance",tc:"t-finance",title:"Feature Engineering",
+           desc:"Build predictive features from price data: momentum, mean reversion, volatility ratio. Features are what ML models learn from.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=GQtBolx6Kkk",label:"Feature engineering for finance – YouTube"},
+             {url:"https://www.youtube.com/@TradingWithPython",label:"Trading with Python – YouTube channel"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"ML Signal — Logistic Regression",
+           desc:"Train a logistic regression to predict next-day up/down. Use walk-forward validation (not standard k-fold — that leaks future data).",
+           links:[
+             {url:"https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression",label:"scikit-learn – Logistic Regression"},
+             {url:"https://www.youtube.com/watch?v=J5bXOOmkopc",label:"Walk-forward validation – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"Mock Interview — 45 mins",
+           desc:"Set a timer. Do 1 medium problem in C++. Aim to finish in 25 minutes. Review the solution and note where you lost time.",
+           links:[
+             {url:"https://leetcode.com/",label:"LeetCode – switch to timed mode"},
+             {url:"https://www.pramp.com/",label:"Pramp – free mock interviews with peers"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent3)", topic:"Capstone Project",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Capstone — Options Pricer + GBM Dashboard",
+           desc:"Combine everything: C++ Black-Scholes pricer, Python GBM simulation, and a simple dashboard. Show Greeks and price paths.",
+           links:[
+             {url:"https://plotly.com/python/",label:"Plotly – interactive Python charts"},
+             {url:"https://streamlit.io/",label:"Streamlit – easy Python web dashboard (free)"}
+           ]},
+          {time:"10:30–12:00",tag:"Project",tc:"t-project",title:"Capstone — Build the Interface",
+           desc:"Use Streamlit to make a simple interactive web app: user inputs S, K, r, σ, T — see the option price and a GBM simulation. Impressive for a CV.",
+           links:[
+             {url:"https://docs.streamlit.io/",label:"Streamlit docs – very beginner friendly"},
+             {url:"https://www.youtube.com/watch?v=VqgUkExPvLY",label:"Streamlit crash course – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Probability Puzzles",
+           desc:"Do 5 quant interview brainteasers. These are tested at Jane Street, Optiver, and IMC. Expected value and combinatorics focus.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=uzsWT3bMSKg",label:"Quant interview problems – YouTube"},
+             {url:"https://www.glassdoor.co.uk/Interview/Optiver-Interview-Questions-E671703.htm",label:"Glassdoor – Optiver interview questions"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent3)", topic:"Review & Polish",
+        blocks:[
+          {time:"9:00–10:30",tag:"Project",tc:"t-project",title:"Capstone — Polish & Push",
+           desc:"Finalise your dashboard. Write a strong README. Take a screenshot for your LinkedIn. Push everything to GitHub.",
+           links:[
+             {url:"https://github.com/",label:"GitHub — push your project"},
+             {url:"https://shields.io/",label:"Shields.io — add badges to README"}
+           ]},
+          {time:"10:30–12:00",tag:"Review",tc:"t-review",title:"GitHub Portfolio Review",
+           desc:"You should now have 3 projects: Stock Analyser, Backtester, Options Dashboard. Check each README is clear and professional.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=G-EGDH50hGE",label:"How to make a great GitHub profile – YouTube"},
+             {url:"https://readme.so/",label:"readme.so — README builder tool"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"LeetCode Hard Attempt",
+           desc:"Minimum Window Substring or Word Ladder — push yourself with a hard problem.",
+           links:[
+             {url:"https://leetcode.com/problems/minimum-window-substring/",label:"Minimum Window Substring – LC"},
+             {url:"https://www.youtube.com/watch?v=jSto0O4AJbM",label:"Min Window Substring – NeetCode"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Minimum Window Substring",diff:"hard",topic:"Sliding Window",url:"https://leetcode.com/problems/minimum-window-substring/"},
+      {name:"Word Ladder",diff:"hard",topic:"BFS/Graph",url:"https://leetcode.com/problems/word-ladder/"},
+      {name:"Best Time to Buy and Sell Stock IV",diff:"hard",topic:"DP",url:"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/"},
+    ]
+  },
+  {
+    id:11, phase:3, phaseLabel:"Phase 3", pc:"pp3", color:"var(--accent3)",
+    title:"Interview Preparation — Technical",
+    goal:"Simulate real quant dev interview conditions. Technical, finance, and system design practice.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent3)", topic:"Coding Interviews",
+        blocks:[
+          {time:"9:00–10:00",tag:"CS",tc:"t-cs",title:"CV & GitHub Polish",
+           desc:"Update CV: lead with C++, Python, financial modelling. List all 3 projects with outcomes (e.g. 'backtester with 18% Sharpe ratio'). Link GitHub prominently.",
+           links:[
+             {url:"https://www.overleaf.com/latex/templates/tagged/cv",label:"Overleaf – free CV LaTeX templates"},
+             {url:"https://www.youtube.com/watch?v=aKjsy-b00QM",label:"Tech CV guide – YouTube"}
+           ]},
+          {time:"10:00–12:00",tag:"LeetCode",tc:"t-lc",title:"Timed Mock — 2 Mediums in C++",
+           desc:"Set a 50-minute timer. Solve 2 medium problems in C++. No hints. Then read the best solution and understand why it's better.",
+           links:[
+             {url:"https://leetcode.com/",label:"LeetCode — timed mode"},
+             {url:"https://www.pramp.com/",label:"Pramp — free peer mock interviews"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Finance Interview Q&A",
+           desc:"Prepare clear verbal answers for: 'What is delta?', 'What is VaR?', 'What does a quant dev do?', 'Explain Black-Scholes in simple terms'.",
+           links:[
+             {url:"https://www.glassdoor.co.uk/Interview/Citadel-Interview-Questions-E627560.htm",label:"Glassdoor – Citadel interview questions"},
+             {url:"https://www.glassdoor.co.uk/Interview/Jane-Street-Interview-Questions-E255763.htm",label:"Glassdoor – Jane Street interview questions"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent3)", topic:"System Design & Probability",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"System Design Mock",
+           desc:"Practice answering: 'Design a market data distribution system for 10,000 clients'. Draw it out. Talk through trade-offs.",
+           links:[
+             {url:"https://github.com/donnemartin/system-design-primer",label:"System Design Primer – GitHub"},
+             {url:"https://www.youtube.com/watch?v=lX4CrbXMsNQ",label:"System design interview guide – YouTube"}
+           ]},
+          {time:"10:30–12:00",tag:"Finance",tc:"t-finance",title:"Probability Puzzles — 10 Problems",
+           desc:"Jane Street and Optiver love these. Focus on expected value, conditional probability, and combinatorics. Time yourself.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=uzsWT3bMSKg",label:"Quant brainteasers – YouTube"},
+             {url:"https://www.quantguide.io/",label:"QuantGuide.io – free quant interview problems"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Full Mock Interview",
+           desc:"45-minute simulation: 15 min coding (1 medium C++) → 15 min finance Qs → 15 min behavioural. Record yourself and review.",
+           links:[
+             {url:"https://www.pramp.com/",label:"Pramp – mock interview platform (free)"},
+             {url:"https://www.exponent.com/",label:"Exponent – interview prep"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent3)", topic:"Applications & Networking",
+        blocks:[
+          {time:"9:00–10:30",tag:"Review",tc:"t-review",title:"Target Firm Research",
+           desc:"Research your top 5 firms. What do they trade? What tech stack? What's their interview process? Tailor your applications.",
+           links:[
+             {url:"https://www.glassdoor.co.uk/",label:"Glassdoor – company reviews & interviews"},
+             {url:"https://www.linkedin.com/",label:"LinkedIn – research firm employees"},
+             {url:"https://www.efinancialcareers.co.uk/",label:"eFinancialCareers – finance job listings"}
+           ]},
+          {time:"10:30–12:00",tag:"Review",tc:"t-review",title:"Apply to Internships",
+           desc:"Submit to your target firms. Applications typically open September–October for summer internships. Apply early — rolling admissions.",
+           links:[
+             {url:"https://www.janestreet.com/join-jane-street/internships/",label:"Jane Street internships"},
+             {url:"https://www.citadel.com/careers/students/",label:"Citadel student careers"},
+             {url:"https://optiver.com/working-at-optiver/career-opportunities/",label:"Optiver careers"}
+           ]},
+          {time:"14:00–15:30",tag:"LeetCode",tc:"t-lc",title:"LeetCode Revision",
+           desc:"Redo your 5 hardest problems from the summer entirely from memory. This is the most effective interview prep.",
+           links:[
+             {url:"https://neetcode.io/practice",label:"NeetCode — filter by topic"},
+             {url:"https://leetcode.com/studyplan/top-interview-150/",label:"LC Top 150 Interview Questions"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Alien Dictionary",diff:"hard",topic:"Graph/Topo Sort",url:"https://leetcode.com/problems/alien-dictionary/"},
+      {name:"Reverse Nodes in k-Group",diff:"hard",topic:"Linked List",url:"https://leetcode.com/problems/reverse-nodes-in-k-group/"},
+      {name:"Insert Interval",diff:"medium",topic:"Array",url:"https://leetcode.com/problems/insert-interval/"},
+    ]
+  },
+  {
+    id:12, phase:3, phaseLabel:"Phase 3", pc:"pp3", color:"var(--accent3)",
+    title:"Final Revision & Summer Wrap-Up",
+    goal:"Consolidate everything. Tidy your GitHub. Build a habit of reading finance news daily. You're ready.",
+    days:[
+      {
+        name:"Day 1", dot:"var(--accent3)", topic:"Full Technical Review",
+        blocks:[
+          {time:"9:00–10:30",tag:"CS",tc:"t-cs",title:"DS&A Master Revision",
+           desc:"Create a personal cheat sheet: one page on each topic — arrays, trees, graphs, DP, heap. Review your own notes from the summer.",
+           links:[
+             {url:"https://neetcode.io/roadmap",label:"NeetCode Roadmap – visual summary"},
+             {url:"https://www.techinterviewhandbook.org/",label:"Tech Interview Handbook – free & comprehensive"}
+           ]},
+          {time:"10:30–12:00",tag:"C++",tc:"t-cpp",title:"C++ Review — Stroustrup Final Read",
+           desc:"Pick any chapter from Stroustrup you found hard. Re-read it now — it will make much more sense after the summer.",
+           links:[
+             {url:"https://www.stroustrup.com/programming.html",label:"Stroustrup companion site",book:true},
+             {url:"https://www.learncpp.com/",label:"LearnCPP – full reference"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Finance Concept Revision",
+           desc:"Can you clearly explain: Black-Scholes, VaR, Sharpe ratio, order book, GBM? Write one paragraph on each from memory.",
+           links:[
+             {url:"https://www.investopedia.com/",label:"Investopedia – verify your explanations"},
+             {url:"https://www.youtube.com/@ritvikmath",label:"ritvikmath – quant finance YouTube"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 2", dot:"var(--accent3)", topic:"GitHub & Online Presence",
+        blocks:[
+          {time:"9:00–10:30",tag:"Review",tc:"t-review",title:"GitHub Final Polish",
+           desc:"Your 3 projects should all have: clear README, code comments, a results section showing output. Pin your best 3 repos.",
+           links:[
+             {url:"https://www.youtube.com/watch?v=G-EGDH50hGE",label:"Perfect GitHub profile – YouTube"},
+             {url:"https://readme.so/",label:"readme.so – README builder"}
+           ]},
+          {time:"10:30–12:00",tag:"Review",tc:"t-review",title:"LinkedIn Update",
+           desc:"Update skills (C++, Python, Financial Modelling, Data Analysis). Add your projects with short descriptions. Connect with quant dev professionals.",
+           links:[
+             {url:"https://www.linkedin.com/",label:"LinkedIn"},
+             {url:"https://www.youtube.com/watch?v=BcwXaWJFTWY",label:"LinkedIn for students – YouTube"}
+           ]},
+          {time:"14:00–15:30",tag:"Finance",tc:"t-finance",title:"Set Up Daily Finance Reading",
+           desc:"Build the habit now: 15 minutes of financial news every day. FT and Bloomberg Markets are best. This makes you sharper in interviews.",
+           links:[
+             {url:"https://www.ft.com/markets",label:"Financial Times – Markets (some free articles)"},
+             {url:"https://www.bloomberg.com/markets",label:"Bloomberg Markets – free news"},
+             {url:"https://www.economist.com/finance-and-economics",label:"The Economist – Finance section"}
+           ]}
+        ]
+      },
+      {
+        name:"Day 3", dot:"var(--accent3)", topic:"Final Day",
+        blocks:[
+          {time:"9:00–10:30",tag:"Review",tc:"t-review",title:"Final Mock Interview",
+           desc:"One last full simulation. You should feel noticeably more confident than in Week 11. Measure your improvement.",
+           links:[
+             {url:"https://www.pramp.com/",label:"Pramp – free mock interviews"},
+             {url:"https://www.quantguide.io/",label:"QuantGuide – quant interview prep"}
+           ]},
+          {time:"10:30–12:00",tag:"Review",tc:"t-review",title:"Year 2 Planning",
+           desc:"Map which university modules will help most (algorithms, systems, networks). Plan what to study during term time to keep momentum.",
+           links:[
+             {url:"https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/",label:"MIT 6.006 – Algorithms (free, world class)"},
+             {url:"https://cs61c.org/",label:"Berkeley CS61C – Computer Architecture (free)"}
+           ]},
+          {time:"14:00–15:30",tag:"Review",tc:"t-review",title:"Summer Reflection & Celebrate 🎉",
+           desc:"You studied ~144 hours this summer. Write down what you're proud of, what surprised you, and what your Year 2 goal is.",
+           links:[
+             {url:"https://www.notion.so/",label:"Notion – write your reflection"},
+             {url:"https://www.youtube.com/watch?v=zQnhm7WZFoU",label:"How to plan your career in finance – YouTube"}
+           ]}
+        ]
+      }
+    ],
+    leetcode:[
+      {name:"Maximum Profit in Job Scheduling",diff:"hard",topic:"DP/Binary Search",url:"https://leetcode.com/problems/maximum-profit-in-job-scheduling/"},
+      {name:"Bus Routes",diff:"hard",topic:"BFS/Graph",url:"https://leetcode.com/problems/bus-routes/"},
+    ]
+  }
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let S = {};
+
+function key(wid,type,idx){ return `qdv2_w${wid}_${type}_${idx}`; }
+
+function allTasks(w){
+  let t=[];
+  w.days.forEach(d => d.blocks.forEach(b => t.push({label:`${d.name}: ${b.title}`,tag:b.tag})));
+  return t;
+}
+
+async function loadState(){
+  for(const w of W){
+    allTasks(w).forEach((_,i)=>{ S[key(w.id,'t',i)]=false; });
+    w.leetcode.forEach((_,i)=>{ S[key(w.id,'l',i)]=false; });
+    for(let i=0;i<allTasks(w).length;i++){
+      try{ const r=await window.storage.get(key(w.id,'t',i)); if(r) S[key(w.id,'t',i)]=r.value==='true'; }catch(e){}
+    }
+    for(let i=0;i<w.leetcode.length;i++){
+      try{ const r=await window.storage.get(key(w.id,'l',i)); if(r) S[key(w.id,'l',i)]=r.value==='true'; }catch(e){}
+    }
+  }
+  updateStats(); renderGrid();
+}
+
+async function save(k,v){ S[k]=v; try{ await window.storage.set(k,String(v)); }catch(e){} }
+
+function weekPct(w){
+  const t=allTasks(w), lc=w.leetcode;
+  let done=0, total=t.length+lc.length;
+  t.forEach((_,i)=>{ if(S[key(w.id,'t',i)]) done++; });
+  lc.forEach((_,i)=>{ if(S[key(w.id,'l',i)]) done++; });
+  return total?Math.round(done/total*100):0;
+}
+
+function updateStats(){
+  let ti=0,di=0,lc=0,lt=0,e=0,m=0,h=0,wc=0;
+  W.forEach(w=>{
+    allTasks(w).forEach((_,i)=>{ ti++; if(S[key(w.id,'t',i)]) di++; });
+    w.leetcode.forEach((l,i)=>{ lt++; ti++;
+      if(S[key(w.id,'l',i)]){ lc++; di++;
+        if(l.diff==='easy')e++; else if(l.diff==='medium')m++; else h++;
+      }
+    });
+    if(weekPct(w)===100) wc++;
+  });
+  const pct=ti?Math.round(di/ti*100):0;
+  document.getElementById('s-pct').textContent=pct+'%';
+  document.getElementById('s-lc').textContent=lc+'/'+lt;
+  document.getElementById('s-wks').textContent=wc+'/12';
+  document.getElementById('overall-bar').style.width=pct+'%';
+  document.getElementById('overall-pct-lbl').textContent=pct+'% complete';
+  const le=document.getElementById('lc-easy'),lm=document.getElementById('lc-med'),lh=document.getElementById('lc-hard');
+  if(le)le.textContent=e; if(lm)lm.textContent=m; if(lh)lh.textContent=h;
+}
+
+// ── RENDER GRID ───────────────────────────────────────────────────────────────
+function renderGrid(){
+  const g=document.getElementById('weeks-grid'); if(!g)return;
+  const barColors={pp1:'var(--accent)',pp2:'var(--accent2)',pp3:'var(--accent3)'};
+  g.innerHTML=W.map(w=>{
+    const pct=weekPct(w),done=pct===100;
+    return `<div class="week-tile${done?' done':''}" onclick="openWeek(${w.id})">
+      <div class="wt-check">✓</div>
+      <div class="wt-num">WEEK ${w.id} · ${w.phaseLabel}</div>
+      <div class="wt-title">${w.title}</div>
+      <div class="wt-pct">${pct}% done</div>
+      <div class="wt-bar"><div class="wt-fill" style="width:${pct}%;background:${barColors[w.pc]}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── OPEN WEEK ─────────────────────────────────────────────────────────────────
+function openWeek(id){
+  const w=W.find(x=>x.id===id); if(!w)return;
+  showView('schedule');
+  const pct=weekPct(w);
+  const col=w.color;
+  const phaseText={pp1:'Phase 1 · CS + C++ Foundations',pp2:'Phase 2 · C++ Deep Dive + Finance',pp3:'Phase 3 · Projects + Interview Prep'};
+
+  const daysHtml=w.days.map((d,di)=>{
+    const blocksHtml=d.blocks.map(b=>{
+      const linksHtml=b.links.map(l=>`<a class="block-link${l.book?' book':''}" href="${l.url}" target="_blank" rel="noopener">${l.book?'📖 ':'🔗 '}${l.label}</a>`).join('');
+      return `<div class="block">
+        <div class="block-time">${b.time}</div>
+        <div class="block-body">
+          <div class="block-tag ${b.tc}">${b.tag}</div>
+          <div class="block-title">${b.title}</div>
+          <div class="block-desc">${b.desc}</div>
+          <div class="block-links">${linksHtml}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="day-card" id="dc-${di}">
+      <div class="day-hdr" onclick="toggleDay('dc-${di}')">
+        <div class="day-hdr-l">
+          <div class="day-dot" style="background:${col}"></div>
+          <span class="day-name">${d.name}</span>
+          <span class="day-topic">${d.topic}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="day-hrs">4 hrs</span>
+          <span class="day-chev">▾</span>
+        </div>
+      </div>
+      <div class="day-body"><div class="blocks">${blocksHtml}</div></div>
+    </div>`;
+  }).join('');
+
+  const tasks=allTasks(w);
+  const taskHtml=tasks.map((t,i)=>{
+    const k=key(w.id,'t',i), chk=S[k]?'checked':'';
+    return `<div class="task-item ${chk}" onclick="toggleTask(${w.id},${i},this)">
+      <div class="task-cb"></div>
+      <div><div class="task-label">${t.label}</div><div class="task-sub">${t.tag}</div></div>
+    </div>`;
+  }).join('');
+
+  const lcHtml=w.leetcode.map((l,i)=>{
+    const k=key(w.id,'l',i), chk=S[k]?'checked':'';
+    const dc={easy:'de',medium:'dm',hard:'dh'};
+    return `<div class="lc-card ${chk}" onclick="toggleLC(${w.id},${i},this)">
+      <div class="lc-dot ${dc[l.diff]}"></div>
+      <div class="lc-info">
+        <div class="lc-name">${l.name}</div>
+        <div class="lc-meta">${l.diff.toUpperCase()} · ${l.topic}</div>
+      </div>
+      <a class="lc-link" href="${l.url}" target="_blank" rel="noopener" onclick="e=>e.stopPropagation()">Open ↗</a>
+      <div class="lc-cb"></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('week-detail').innerHTML=`
+    <div class="wd-header">
+      <button class="back-btn" onclick="showView('overview')">← Overview</button>
+      <div class="wd-week-label" style="color:${col}">WEEK ${w.id} OF 12 · ${w.phaseLabel}</div>
+      <div class="wd-title">${w.title}</div>
+      <p class="wd-goal">${w.goal}</p>
+      <div class="wd-meta">
+        <span class="wd-badge" style="color:${col};border-color:${col}40">${phaseText[w.pc]}</span>
+        <span class="wd-badge" style="color:var(--muted2);border-color:var(--border)">3 days · 4 hrs/day</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:16px">
+          <div>
+            <div class="pct-display" style="color:${col}">${pct}%</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em">complete</div>
+          </div>
+          <button class="mark-btn" onclick="markDone(${w.id})">Mark all done</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">Daily Schedule</div>
+    <div class="days-wrap">${daysHtml}</div>
+
+    <div class="cl-section">
+      <div class="sec-title">Week Checklist</div>
+      <div class="task-list">${taskHtml}</div>
+    </div>
+
+    <div class="lc-section">
+      <div class="sec-title">LeetCode This Week</div>
+      <div class="lc-grid">${lcHtml}</div>
+    </div>
+  `;
+  // open first day
+  document.getElementById('dc-0')?.classList.add('open');
+}
+
+function toggleDay(id){ document.getElementById(id)?.classList.toggle('open'); }
+
+async function toggleTask(wid,idx,el){
+  const k=key(wid,'t',idx), v=!S[k];
+  el.classList.toggle('checked',v);
+  await save(k,v); updateStats(); renderGrid();
+  const w=W.find(x=>x.id===wid);
+  const pd=document.querySelector('.pct-display'); if(pd) pd.textContent=weekPct(w)+'%';
+}
+
+async function toggleLC(wid,idx,el){
+  const k=key(wid,'l',idx), v=!S[k];
+  el.classList.toggle('checked',v);
+  await save(k,v); updateStats(); renderGrid();
+  const w=W.find(x=>x.id===wid);
+  const pd=document.querySelector('.pct-display'); if(pd) pd.textContent=weekPct(w)+'%';
+}
+
+async function markDone(wid){
+  const w=W.find(x=>x.id===wid);
+  const tasks=allTasks(w);
+  for(let i=0;i<tasks.length;i++) await save(key(wid,'t',i),true);
+  for(let i=0;i<w.leetcode.length;i++) await save(key(wid,'l',i),true);
+  document.querySelectorAll('.task-item').forEach(el=>el.classList.add('checked'));
+  document.querySelectorAll('.lc-card').forEach(el=>el.classList.add('checked'));
+  updateStats(); renderGrid();
+  const pd=document.querySelector('.pct-display'); if(pd) pd.textContent='100%';
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────────────────────
+function renderProgress(){
+  updateStats();
+  const barColors={pp1:'var(--accent)',pp2:'var(--accent2)',pp3:'var(--accent3)'};
+  document.getElementById('prog-grid').innerHTML=W.map(w=>{
+    const pct=weekPct(w);
+    const tasks=allTasks(w);
+    const ld=w.leetcode.filter((_,i)=>S[key(w.id,'l',i)]).length;
+    const td=tasks.filter((_,i)=>S[key(w.id,'t',i)]).length;
+    return `<div class="prog-card" onclick="openWeek(${w.id})">
+      <div class="pc-title">Week ${w.id}: ${w.title}</div>
+      <div class="pc-sub">${td}/${tasks.length} tasks · ${ld}/${w.leetcode.length} LeetCode</div>
+      <div class="pc-bar-wrap"><div class="pc-bar-fill" style="width:${pct}%;background:${barColors[w.pc]}"></div></div>
+      <div class="pc-bar-label"><span>${w.phaseLabel}</span><span>${pct}%</span></div>
+    </div>`;
+  }).join('');
+
+  const skills=[
+    {name:'Python & Data Analysis',weeks:[1,2,3,4],desc:'Weeks 1–4 foundations'},
+    {name:'C++ Proficiency',weeks:[2,3,4,5,6,7,8,9],desc:'Stroustrup + practice'},
+    {name:'Data Structures & Algorithms',weeks:[1,2,3,4,5,7],desc:'LeetCode + theory'},
+    {name:'Financial Mathematics',weeks:[6,7,8,9,10],desc:'Options, GBM, risk'},
+    {name:'Quant Projects Portfolio',weeks:[4,6,8,9,10],desc:'3 GitHub projects'},
+    {name:'Interview Readiness',weeks:[10,11,12],desc:'Mock interviews + puzzles'},
+  ];
+  document.getElementById('skills-grid').innerHTML=skills.map(s=>{
+    const avg=Math.round(s.weeks.map(id=>{const w=W.find(x=>x.id===id);return w?weekPct(w):0;}).reduce((a,b)=>a+b,0)/s.weeks.length);
+    return `<div class="prog-card">
+      <div class="pc-title">${s.name}</div>
+      <div class="pc-sub">${s.desc}</div>
+      <div class="pc-bar-wrap"><div class="pc-bar-fill" style="width:${avg}%;background:var(--accent3)"></div></div>
+      <div class="pc-bar-label"><span>Based on relevant weeks</span><span>${avg}%</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  const i={overview:0,schedule:1,progress:2};
+  document.querySelectorAll('.nav-tab')[i[name]]?.classList.add('active');
+  if(name==='progress') renderProgress();
+  if(name==='overview'){updateStats();renderGrid();}
+  window.scrollTo(0,0);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  W.forEach(w=>{
+    allTasks(w).forEach((_,i)=>{ S[key(w.id,'t',i)]=false; });
+    w.leetcode.forEach((_,i)=>{ S[key(w.id,'l',i)]=false; });
+  });
+  loadState();
+});
+</script>
+</body>
+</html>

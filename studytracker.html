@@ -1258,21 +1258,21 @@ function allTasks(w){
   return t;
 }
 
-async function loadState(){
+function loadState(){
   for(const w of W){
     allTasks(w).forEach((_,i)=>{ S[key(w.id,'t',i)]=false; });
     w.leetcode.forEach((_,i)=>{ S[key(w.id,'l',i)]=false; });
     for(let i=0;i<allTasks(w).length;i++){
-      try{ const r=await window.storage.get(key(w.id,'t',i)); if(r) S[key(w.id,'t',i)]=r.value==='true'; }catch(e){}
+      const r=localStorage.getItem(key(w.id,'t',i)); if(r!==null) S[key(w.id,'t',i)]=r==='true';
     }
     for(let i=0;i<w.leetcode.length;i++){
-      try{ const r=await window.storage.get(key(w.id,'l',i)); if(r) S[key(w.id,'l',i)]=r.value==='true'; }catch(e){}
+      const r=localStorage.getItem(key(w.id,'l',i)); if(r!==null) S[key(w.id,'l',i)]=r==='true';
     }
   }
   updateStats(); renderGrid();
 }
 
-async function save(k,v){ S[k]=v; try{ await window.storage.set(k,String(v)); }catch(e){} }
+function save(k,v){ S[k]=v; localStorage.setItem(k,String(v)); }
 
 function weekPct(w){
   const t=allTasks(w), lc=w.leetcode;
@@ -1417,27 +1417,27 @@ function openWeek(id){
 
 function toggleDay(id){ document.getElementById(id)?.classList.toggle('open'); }
 
-async function toggleTask(wid,idx,el){
+function toggleTask(wid,idx,el){
   const k=key(wid,'t',idx), v=!S[k];
   el.classList.toggle('checked',v);
-  await save(k,v); updateStats(); renderGrid();
+  save(k,v); updateStats(); renderGrid();
   const w=W.find(x=>x.id===wid);
   const pd=document.querySelector('.pct-display'); if(pd) pd.textContent=weekPct(w)+'%';
 }
 
-async function toggleLC(wid,idx,el){
+function toggleLC(wid,idx,el){
   const k=key(wid,'l',idx), v=!S[k];
   el.classList.toggle('checked',v);
-  await save(k,v); updateStats(); renderGrid();
+  save(k,v); updateStats(); renderGrid();
   const w=W.find(x=>x.id===wid);
   const pd=document.querySelector('.pct-display'); if(pd) pd.textContent=weekPct(w)+'%';
 }
 
-async function markDone(wid){
+function markDone(wid){
   const w=W.find(x=>x.id===wid);
   const tasks=allTasks(w);
-  for(let i=0;i<tasks.length;i++) await save(key(wid,'t',i),true);
-  for(let i=0;i<w.leetcode.length;i++) await save(key(wid,'l',i),true);
+  for(let i=0;i<tasks.length;i++) save(key(wid,'t',i),true);
+  for(let i=0;i<w.leetcode.length;i++) save(key(wid,'l',i),true);
   document.querySelectorAll('.task-item').forEach(el=>el.classList.add('checked'));
   document.querySelectorAll('.lc-card').forEach(el=>el.classList.add('checked'));
   updateStats(); renderGrid();
